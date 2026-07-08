@@ -1,0 +1,12 @@
+<nav class="nav">
+  <div class="nav__elements-container nav__left-elements-container">
+    <app-navigation-button [icon]="faChild" text="MyCompany" link="/"/>
+    <app-navigation-button text="Shop" link="/"/>
+    <app-navigation-button text="Authentication" link="/auth"/>
+    <app-navigation-button [icon]="faShoppingCart" link="/cart"/>
+  </div>
+  <div class="nav__elements-container nav__right-elements-container">
+    <app-navigation-search-input/>
+    <app-navigation-button [icon]="faSignOut"/>
+  </div>
+</nav>

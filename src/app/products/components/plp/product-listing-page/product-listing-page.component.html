@@ -1,0 +1,13 @@
+<article class="plp-layout">
+  <aside class="plp-layout__filters-sidebar"></aside>
+  <section class="plp-layout__product-list-container">
+    <app-product-listing-tile
+      *ngFor="let product of (products$ | async | searchFilter : (plpSearchService.searchQuery | async))
+      trackBy: trackById"
+      [product]="product"
+    />
+  </section>
+</article>
+
+
+
