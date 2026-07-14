@@ -14,6 +14,9 @@
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transform: translateY(-4px);
+  }
+
+  &__clickable-area:hover {
     cursor: pointer;
   }
 
@@ -44,65 +47,31 @@
 
   &__buttons-container {
     margin-top: auto;
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
     gap: 0.4rem;
     margin-bottom: 0.5rem;
-  }
-
-  &__btn {
-    padding: 0.4rem 0.6rem;
-    border-radius: 6px;
-    border: 1px solid darkgray;
-    cursor: pointer;
-    background: whitesmoke;
-    transition: background 0.2s;
-
-    &:hover {
-      background: lightgray;
-    }
-
-    &__counter {
-      padding: 0.4rem 0.8rem;
-      font-weight: bold;
-      width: 2.5rem;
-    }
-
-    &__add-to-cart {
-      flex: 2;
-    }
-  }
-
-  &__cart-counter {
-    display: flex;
+    min-width: 0;
     align-items: center;
-    gap: 0.5rem;
 
-    &__count {
-      min-width: 20px;
-      text-align: center;
-      font-weight: bold;
-    }
+    --add-to-cart-button-width: 6rem;
+    --add-to-cart-button-height: 2.2rem;
+    --add-to-cart-button-font-size: 0.9rem;
+    --add-to-cart-button-padding: 0.25rem 0.4rem;
+    --add-to-cart-counter-btn-size: 2.2rem;
+
+    --base-btn-height: 2.2rem;
+    --base-btn-font-size: 0.9rem;
+    --base-btn-padding: 0.25rem 0.4rem;
   }
 
   &__info {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 1rem;
     padding-top: 0.5rem;
     border-top: 1px solid lightgray;
     font-weight: bold;
-
-    &__rating {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-
-      &__icon {
-        color: gold;
-        font-size: 0.85rem;
-      }
-    }
   }
 }

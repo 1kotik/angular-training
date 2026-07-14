@@ -31,10 +31,24 @@ export class ProductService {
   }
 
   public deleteById(id: number): void {
-    this.apiService.deleteById(this.ENTITY_NAME, id.toString()).subscribe(() => {
-      const current = this.productsSubject.getValue();
-      this.productsSubject.next(current.filter(product => id !== product.id));
+    this.apiService.deleteById(this.ENTITY_NAME, id).subscribe({
+      next: () => {
+        this.deleteProduct(id);
+      },
+      error: (err) => {
+        if (err.status === 404) {
+          this.deleteProduct(id);
+        }
+      }
     });
   }
 
+  public getById(id: number): Observable<Product> {
+    return this.apiService.getById<Product>(this.ENTITY_NAME, id);
+  }
+
+  private deleteProduct(id: number): void {
+    const current = this.productsSubject.getValue();
+    this.productsSubject.next(current.filter(product => id !== product.id));
+  }
 }

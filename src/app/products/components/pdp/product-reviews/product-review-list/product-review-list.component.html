@@ -1,0 +1,4 @@
+<section class="product-review-list" *ngIf="reviews$ | async as reviews">
+  <h2 class="product-review-list__header">{{ reviews.length > 0 ? 'Customer reviews' : 'No reviews' }}</h2>
+  <app-product-review-item *ngFor="let review of reviews" [review]="review"/>
+</section>

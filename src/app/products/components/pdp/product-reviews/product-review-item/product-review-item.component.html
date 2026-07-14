@@ -1,0 +1,10 @@
+<section class="product-review">
+  <div class="product-review__img-container">
+    <img [ngSrc]="review.avatar" alt="User avatar" class="product-review__img" fill>
+  </div>
+  <div class="product-review__header">
+    <span class="product-review__header__name">{{ review.name }}</span>
+    <app-rating [rating]="review.rate"/>
+  </div>
+  <div class="product-review__text">{{ review.text }}</div>
+</section>

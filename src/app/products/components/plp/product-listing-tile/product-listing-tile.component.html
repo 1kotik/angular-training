@@ -1,30 +1,18 @@
 <section class="product-tile">
   <div>
-    <div class="product-tile__image-container">
-      <img [ngSrc]="product.image" alt="Product image" class="product-tile__image" fill/>
+    <div class="product-tile__clickable-area" [routerLink]="['/products', product.id]">
+      <div class="product-tile__image-container">
+        <img [ngSrc]="product.image" alt="Product image" class="product-tile__image" fill/>
+      </div>
+      <span class="product-tile__title">{{ product.title }}</span>
     </div>
-    <span class="product-tile__title">{{ product.title }}</span>
     <div class="product-tile__buttons-container">
-      <button (click)="cartButtonPressed = true" *ngIf="!cartButtonPressed; else cartCounter"
-              class="product-tile__btn product-tile__btn__add-to-cart">Add to cart
-      </button>
-      <ng-template #cartCounter class="product-tile__cart-counter">
-        <button (click)="addToCartCount = addToCartCount > 1 ? addToCartCount - 1 : 1"
-                class="product-tile__btn product-tile__btn__counter">-
-        </button>
-        <span class="product-tile__cart-counter__count">{{ addToCartCount }}</span>
-        <button (click)="addToCartCount = addToCartCount + 1"
-                class="product-tile__btn product-tile__btn__counter">+
-        </button>
-      </ng-template>
-      <button class="product-tile__btn product-tile__btn__edit">Edit</button>
-      <button (click)="delete(product.id)" class="product-tile__btn product-tile__btn__delete">Delete</button>
+      <app-add-to-cart-button [stock]="product.stock" [cartButtonPressed]="false"/>
+      <button class="base-btn">Edit</button>
+      <button class="base-btn" (click)="delete(product.id)">Delete</button>
     </div>
     <div class="product-tile__info">
-      <div class="product-tile__info__rating">
-        <span class="product-tile__info__rating__number">{{ product.rating.rate }}</span>
-        <fa-icon class="product-tile__info__rating__icon" [icon]="faStar"/>
-      </div>
+      <app-rating [rating]="product.rating.rate"/>
       <span class="product-tile__info__price">{{ product.price | currencyFormat }}</span>
     </div>
   </div>

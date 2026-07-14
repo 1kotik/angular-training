@@ -1,0 +1,26 @@
+<section class="product-details" *ngIf="product$ | async as product">
+  <div class="product-details__img-container">
+    <img [ngSrc]="product.image" alt="Product image" class="product-details__img" fill/>
+  </div>
+  <div class="product-details__info-container">
+    <span class="product-details__info-container__title">
+      {{ product.title }}
+    </span>
+    <div class="product-details__info-container__ratings-container">
+      <app-rating [rating]="product.rating.rate"/>
+      <span class="product-details__info-container__ratings-container__review-number">
+        ({{ product.rating.count }} reviews)
+      </span>
+    </div>
+    <div class="product-details__info-container__add-to-cart">
+      <app-add-to-cart-button [stock]="product.stock" [cartButtonPressed]="false"/>
+      <app-stock-availability [stock]="product.stock"/>
+    </div>
+    <span class="product-details__info-container__price">
+      Price: {{ product.price | currencyFormat }}
+    </span>
+    <span class="product-details__info-container__description">
+      {{ product.description }}
+    </span>
+  </div>
+</section>

@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {ProductService} from "../../../services/product.service";
 import {PLPSearchService} from "../../../services/plp-search.service";
-import {map, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {Product} from "../../../../shared/models/product.model";
 
 @Component({

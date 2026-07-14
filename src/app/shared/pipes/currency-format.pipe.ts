@@ -10,7 +10,7 @@ export class CurrencyFormatPipe implements PipeTransform {
     if(!value) {
       return '';
     }
-    return `${APP_CONSTANTS.CURRENCY} ${value}`;
+    return `${APP_CONSTANTS.CURRENCY}${value}`;
   }
 
 }
