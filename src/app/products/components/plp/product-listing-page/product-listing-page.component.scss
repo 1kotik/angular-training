@@ -4,17 +4,24 @@
   gap: 2rem;
   padding: 2rem;
   min-height: 100vh;
+
+  &__filters-sidebar {
+    border-right: 1px solid lightgray;
+    padding-right: 1rem;
+    min-height: 100%;
+  }
+
+  &__main {
+    &__product-list-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 260px);
+      gap: 2rem;
+      justify-content: start;
+    }
+  }
+
 }
 
-.plp-layout__filters-sidebar {
-  border-right: 1px solid lightgray;
-  padding-right: 1rem;
-  min-height: 100%;
-}
-
-.plp-layout__product-list-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 260px);
-  gap: 2rem;
-  justify-content: start;
+.plp-filter-result-message {
+  font-size: 1.1rem;
 }

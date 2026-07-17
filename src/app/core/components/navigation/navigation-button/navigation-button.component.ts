@@ -3,7 +3,7 @@ import {IconDefinition} from "@fortawesome/fontawesome-svg-core";
 
 
 @Component({
-  selector: 'app-navigation-button',
+  selector: 'navigation-button',
   templateUrl: './navigation-button.component.html',
   styleUrl: './navigation-button.component.scss'
 })

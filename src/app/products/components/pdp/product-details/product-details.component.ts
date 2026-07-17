@@ -5,7 +5,7 @@ import {map, Observable} from "rxjs";
 import {PRODUCT_AVAILABILITY} from "../../../../shared/components/stock-availability/stock-availability.component";
 
 @Component({
-  selector: 'app-product-details',
+  selector: 'product-details',
   templateUrl: './product-details.component.html',
   styleUrl: './product-details.component.scss'
 })

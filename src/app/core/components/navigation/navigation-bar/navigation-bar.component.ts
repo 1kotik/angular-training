@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {faChild, faShoppingCart, faSignOut} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
-  selector: 'app-navigation-bar',
+  selector: 'navigation-bar',
   templateUrl: './navigation-bar.component.html',
   styleUrl: './navigation-bar.component.scss'
 })

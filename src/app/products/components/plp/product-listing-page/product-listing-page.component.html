@@ -1,11 +1,24 @@
 <article class="plp-layout">
-  <aside class="plp-layout__filters-sidebar"></aside>
-  <section class="plp-layout__product-list-container">
-    <app-product-listing-tile
-      *ngFor="let product of (products$ | async | searchFilter : (plpSearchService.searchQuery | async))
-      trackBy: trackById"
-      [product]="product"
-    />
+  <aside class="plp-layout__filters-sidebar">
+    <filter-section/>
+  </aside>
+  <section class="plp-layout__main">
+    <filter-badges-list/>
+    <ng-container *ngIf="(products$ | async | searchFilter : (plpSearchService.searchQuery | async)) as products">
+      <div *ngIf="products.length > 0">
+        <p class="plp-filter-result-message">Found {{ products.length }} product{{ products.length > 1 ? 's' : '' }}</p>
+        <div class="plp-layout__main__product-list-container">
+          <product-listing-tile
+            *ngFor="let product of products; trackBy: trackById"
+            [product]="product"
+          />
+        </div>
+      </div>
+      <div *ngIf="products.length === 0" class="plp-filter-result-message">
+        <p>No products found</p>
+      </div>
+
+    </ng-container>
   </section>
 </article>
 

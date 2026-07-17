@@ -11,6 +11,12 @@ import {RouterLink} from "@angular/router";
 import { ProductReviewItemComponent } from './components/pdp/product-reviews/product-review-item/product-review-item.component';
 import { ProductReviewListComponent } from './components/pdp/product-reviews/product-review-list/product-review-list.component';
 import { ProductDetailsPageComponent } from './components/pdp/product-details-page/product-details-page.component';
+import { FilterSectionComponent } from './components/plp/filter-section/filter-section.component';
+import {ReactiveFormsModule} from "@angular/forms";
+import { FilterBadgesListComponent } from './components/plp/filter-badges-list/filter-badges-list.component';
+import { FilterBadgeComponent } from './components/plp/filter-badge/filter-badge.component';
+import { FormatFilterValuePipe } from './pipes/format-filter-value.pipe';
+import { EditPageComponent } from './components/edit-page/edit-page.component';
 
 
 @NgModule({
@@ -21,15 +27,21 @@ import { ProductDetailsPageComponent } from './components/pdp/product-details-pa
     ProductDetailsComponent,
     ProductReviewItemComponent,
     ProductReviewListComponent,
-    ProductDetailsPageComponent
+    ProductDetailsPageComponent,
+    FilterSectionComponent,
+    FilterBadgesListComponent,
+    FilterBadgeComponent,
+    FormatFilterValuePipe,
+    EditPageComponent
   ],
-  imports: [
-    CommonModule,
-    NgOptimizedImage,
-    SharedModule,
-    FaIconComponent,
-    CartModule,
-    RouterLink
-  ]
+    imports: [
+        CommonModule,
+        NgOptimizedImage,
+        SharedModule,
+        FaIconComponent,
+        CartModule,
+        RouterLink,
+        ReactiveFormsModule
+    ]
 })
 export class ProductsModule { }

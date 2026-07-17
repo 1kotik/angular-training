@@ -1,0 +1,27 @@
+.filter-container {
+  margin-bottom: 1.5rem;
+  width: 100%;
+
+  h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: space-between;
+
+    &__input-label {
+      font-size: 0.8rem;
+    }
+
+    &__input {
+      width: 60px;
+      padding: 4px;
+      border: 1px solid dimgray;
+      border-radius: 4px;
+    }
+  }
+}

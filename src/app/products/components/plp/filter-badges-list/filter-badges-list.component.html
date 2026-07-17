@@ -1,0 +1,8 @@
+<div class="filter-badges-list">
+  <filter-badge
+    *ngFor="let filterInfoEntry of (filterInfos$ | async | mapToArray)
+    trackBy: trackById"
+    [id]="filterInfoEntry[0]"
+    [value]="filterInfoEntry[1]"
+    (deleted)="deleteBadge(filterInfoEntry[0])"/>
+</div>

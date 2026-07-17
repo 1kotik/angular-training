@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-stock-availability',
+  selector: 'stock-availability',
   templateUrl: './stock-availability.component.html',
   styleUrl: './stock-availability.component.scss'
 })

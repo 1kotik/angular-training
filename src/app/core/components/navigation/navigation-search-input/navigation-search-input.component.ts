@@ -3,7 +3,7 @@ import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import {PLPSearchService} from "../../../../products/services/plp-search.service";
 
 @Component({
-  selector: 'app-navigation-search-input',
+  selector: 'navigation-search-input',
   templateUrl: './navigation-search-input.component.html',
   styleUrl: './navigation-search-input.component.scss'
 })

@@ -7,12 +7,12 @@
       <span class="product-tile__title">{{ product.title }}</span>
     </div>
     <div class="product-tile__buttons-container">
-      <app-add-to-cart-button [stock]="product.stock" [cartButtonPressed]="false"/>
+      <add-to-cart-button [stock]="product.stock" [cartButtonPressed]="false"/>
       <button class="base-btn">Edit</button>
       <button class="base-btn" (click)="delete(product.id)">Delete</button>
     </div>
     <div class="product-tile__info">
-      <app-rating [rating]="product.rating.rate"/>
+      <rating [rating]="product.rating.rate"/>
       <span class="product-tile__info__price">{{ product.price | currencyFormat }}</span>
     </div>
   </div>

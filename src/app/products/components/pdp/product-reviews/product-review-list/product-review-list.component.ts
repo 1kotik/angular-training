@@ -4,7 +4,7 @@ import {Observable} from "rxjs";
 import {ProductReviewService} from "../../../../services/product-review.service";
 
 @Component({
-  selector: 'app-product-review-list',
+  selector: 'product-review-list',
   templateUrl: './product-review-list.component.html',
   styleUrl: './product-review-list.component.scss'
 })

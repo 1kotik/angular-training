@@ -5,7 +5,11 @@ import {RouterLink} from "@angular/router";
 import {CurrencyFormatPipe} from './pipes/currency-format.pipe';
 import {StockAvailabilityComponent} from './components/stock-availability/stock-availability.component';
 import {RatingComponent} from './components/rating/rating.component';
-import { StockAvailabilityLabelColorDirective } from './directives/stock-availability-label-color.directive';
+import {StockAvailabilityLabelColorDirective} from './directives/stock-availability-label-color.directive';
+import {ReactiveFormsModule} from "@angular/forms";
+import {RangeFilterComponent} from "./components/range-filter/range-filter.component";
+import { MapToArrayPipe } from './pipes/map-to-array.pipe';
+import { SimpleInputComponent } from './components/simple-input/simple-input.component';
 
 
 @NgModule({
@@ -14,17 +18,23 @@ import { StockAvailabilityLabelColorDirective } from './directives/stock-availab
     CurrencyFormatPipe,
       StockAvailabilityComponent,
       RatingComponent,
-      StockAvailabilityLabelColorDirective
+      StockAvailabilityLabelColorDirective,
+      RangeFilterComponent,
+      MapToArrayPipe,
+      SimpleInputComponent
   ],
   exports: [
     CurrencyFormatPipe,
     StockAvailabilityComponent,
-    RatingComponent
+    RatingComponent,
+    RangeFilterComponent,
+    MapToArrayPipe
   ],
   imports: [
     CommonModule,
     RouterLink,
     FaIconComponent,
+    ReactiveFormsModule,
   ]
 })
 export class SharedModule {

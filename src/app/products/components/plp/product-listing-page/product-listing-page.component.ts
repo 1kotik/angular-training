@@ -5,7 +5,7 @@ import {Observable} from "rxjs";
 import {Product} from "../../../../shared/models/product.model";
 
 @Component({
-  selector: 'app-product-listing-page',
+  selector: 'product-listing-page',
   templateUrl: './product-listing-page.component.html',
   styleUrl: './product-listing-page.component.scss'
 })

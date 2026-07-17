@@ -7,14 +7,14 @@
       {{ product.title }}
     </span>
     <div class="product-details__info-container__ratings-container">
-      <app-rating [rating]="product.rating.rate"/>
+      <rating [rating]="product.rating.rate"/>
       <span class="product-details__info-container__ratings-container__review-number">
         ({{ product.rating.count }} reviews)
       </span>
     </div>
     <div class="product-details__info-container__add-to-cart">
-      <app-add-to-cart-button [stock]="product.stock" [cartButtonPressed]="false"/>
-      <app-stock-availability [stock]="product.stock"/>
+      <add-to-cart-button [stock]="product.stock" [cartButtonPressed]="false"/>
+      <stock-availability [stock]="product.stock"/>
     </div>
     <span class="product-details__info-container__price">
       Price: {{ product.price | currencyFormat }}

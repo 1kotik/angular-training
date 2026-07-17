@@ -3,7 +3,7 @@ import {Product} from "../../../../shared/models/product.model";
 import {ProductService} from "../../../services/product.service";
 
 @Component({
-  selector: 'app-product-listing-tile',
+  selector: 'product-listing-tile',
   templateUrl: './product-listing-tile.component.html',
   styleUrls: ['./product-listing-tile.component.scss', '../../../../shared/styles/buttons.scss']
 })

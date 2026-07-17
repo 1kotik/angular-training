@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-add-to-cart-button',
+  selector: 'add-to-cart-button',
   templateUrl: './add-to-cart-button.component.html',
   styleUrls: ['./add-to-cart-button.component.scss', '../../../shared/styles/buttons.scss']
 })
