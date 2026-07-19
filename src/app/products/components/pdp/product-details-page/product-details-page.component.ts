@@ -6,9 +6,9 @@ import {Component, Input} from '@angular/core';
   styleUrl: './product-details-page.component.scss'
 })
 export class ProductDetailsPageComponent {
-  private _productId!: number
+  private _productId!: string
 
-  @Input() set id(productId: number) {
+  @Input() set id(productId: string) {
     this._productId = productId;
   }
 

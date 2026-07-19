@@ -17,7 +17,7 @@ export class ProductListingPageComponent {
     return this.productService.products;
   }
 
-  public trackById(index: number, product: Product): number {
+  public trackById(index: number, product: Product): string {
     return product.id;
   }
 }

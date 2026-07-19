@@ -11,7 +11,7 @@ export class ProductListingTileComponent {
   @Input() public product!: Product;
   private readonly productService: ProductService = inject(ProductService);
 
-  public delete(id: number): void {
+  public delete(id: string): void {
     this.productService.deleteById(id);
   }
 }

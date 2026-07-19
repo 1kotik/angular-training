@@ -36,7 +36,7 @@ export class ProductService {
     return this.apiService.get<Product[]>(this.ENTITY_NAME, httpParams);
   }
 
-  public deleteById(id: number): void {
+  public deleteById(id: string): void {
     this.apiService.deleteById(this.ENTITY_NAME, id).subscribe({
       next: () => {
         this.deleteProduct(id);
@@ -49,11 +49,15 @@ export class ProductService {
     });
   }
 
-  public getById(id: number): Observable<Product> {
+  public getById(id: string): Observable<Product> {
     return this.apiService.getById<Product>(this.ENTITY_NAME, id);
   }
 
-  private deleteProduct(id: number): void {
+  public updateProduct(product: Product): Observable<Product> {
+    return this.apiService.updateById(this.ENTITY_NAME, product.id, product);
+  }
+
+  private deleteProduct(id: string): void {
     const current = this.productsSubject.getValue();
     this.productsSubject.next(current.filter(product => id !== product.id));
   }

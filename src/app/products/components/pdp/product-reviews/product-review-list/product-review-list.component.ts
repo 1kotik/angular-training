@@ -11,7 +11,7 @@ import {ProductReviewService} from "../../../../services/product-review.service"
 export class ProductReviewListComponent {
   private readonly productReviewService = inject(ProductReviewService);
 
-  @Input() public set productId(id: number) {
+  @Input() public set productId(id: string) {
     this.productReviewService.loadReviews(id);
   };
 

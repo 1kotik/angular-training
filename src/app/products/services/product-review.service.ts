@@ -17,13 +17,13 @@ export class ProductReviewService {
     return this.reviews$;
   }
 
-  public loadReviews(productId: number): void {
+  public loadReviews(productId: string): void {
     this.getReviews(productId).subscribe(reviews => {
       this.reviewsSubject.next(reviews);
     });
   }
 
-  public getReviews(productId: number): Observable<ProductReview[]> {
+  public getReviews(productId: string): Observable<ProductReview[]> {
     let params: HttpParams = new HttpParams().set("productId", productId);
     return this.apiService.get<ProductReview[]>(this.ENTITY_NAME, params);
   }

@@ -15,7 +15,7 @@ export class ProductDetailsComponent {
   private readonly productService = inject(ProductService);
   public productAvailability$!: Observable<any>;
 
-  @Input() set productId(id: number) {
+  @Input() set productId(id: string) {
     this.product$ = this.productService.getById(id);
     this.productAvailability$ = this.product$.pipe(
       map(product => this.computeProductAvailability(product.stock))

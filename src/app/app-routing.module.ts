@@ -6,6 +6,7 @@ import {
 import {
   ProductDetailsPageComponent
 } from "./products/components/pdp/product-details-page/product-details-page.component";
+import {ProductEditPageComponent} from "./products/components/edit-page/product-edit-page.component";
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
   {
     path: 'products',
     component: ProductListingPageComponent,
+  },
+  {
+    path: 'products/edit/:id',
+    component: ProductEditPageComponent
   },
   {
     path: 'products/:id',

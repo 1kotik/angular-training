@@ -1,0 +1,46 @@
+<article class="edit-page" *ngIf="product$ | async as product">
+  <section class="edit-page__input-section">
+    <h2 class="edit-page__title">Edit product info:</h2>
+    <form (ngSubmit)="editProduct(product, editForm.value)" #editForm="ngForm">
+      <simple-input id="image"
+                    name="image"
+                    label="Image:"
+                    type="text"
+                    [(ngModel)]="product.image"
+                    [required]="true"/>
+      <simple-input id="title"
+                    name="title"
+                    label="Title:"
+                    type="text"
+                    [(ngModel)]="product.title"
+                    [required]="true"/>
+      <simple-input id="price"
+                    name="price"
+                    label="Price:"
+                    type="number"
+                    [(ngModel)]="product.price"
+                    [required]="true"
+                    pattern="^([1-9]\d*(\.\d{1,2})?|0\.\d{1,2})$"/>
+      <simple-input id="stock"
+                    name="stock"
+                    label="Stock:"
+                    type="number"
+                    [(ngModel)]="product.stock"
+                    [required]="true"
+                    pattern="^(0|[1-9]\d*)$"/>
+      <simple-input id="description"
+                    name="description"
+                    label="Description:"
+                    type="text"
+                    inputType="textarea"
+                    [(ngModel)]="product.description"
+                    [required]="true"/>
+      <button type="submit" class="base-btn" [disabled]="editForm.form.invalid">
+        Submit
+      </button>
+    </form>
+  </section>
+  <section class="edit-page__image-section">
+    <img class="edit-page__image-section__image" [ngSrc]="product.image" alt="Product image" fill>
+  </section>
+</article>
