@@ -1,0 +1,8 @@
+<div class="cart-entry">
+  <span>{{ entry.id }}</span>
+  <span>{{ entry.title }}</span>
+  <span>{{ entry.count }}</span>
+  <span>{{ entry.price }}</span>
+  <span>{{ entry.count * entry.price }}</span>
+  <fa-icon (click)="removeEntry()" class="cart-entry__remove-btn" [icon]="faTimes"/>
+</div>

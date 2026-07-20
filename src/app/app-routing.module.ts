@@ -7,6 +7,7 @@ import {
   ProductDetailsPageComponent
 } from "./products/components/pdp/product-details-page/product-details-page.component";
 import {ProductEditPageComponent} from "./products/components/edit-page/product-edit-page.component";
+import {CartPageComponent} from "./cart/components/cart-page/cart-page.component";
 
 const routes: Routes = [
   {
@@ -25,6 +26,10 @@ const routes: Routes = [
   {
     path: 'products/:id',
     component: ProductDetailsPageComponent
+  },
+  {
+    path: 'cart',
+    component: CartPageComponent
   }
 ];
 

@@ -13,7 +13,7 @@
       </span>
     </div>
     <div class="product-details__info-container__add-to-cart">
-      <add-to-cart-button [stock]="product.stock" [cartButtonPressed]="false"/>
+      <add-to-cart-button [productId]="product.id" [stock]="product.stock" [cartButtonPressed]="false"/>
       <stock-availability [stock]="product.stock"/>
     </div>
     <span class="product-details__info-container__price">

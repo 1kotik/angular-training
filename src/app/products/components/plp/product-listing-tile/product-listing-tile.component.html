@@ -7,7 +7,7 @@
       <span class="product-tile__title">{{ product.title }}</span>
     </div>
     <div class="product-tile__buttons-container">
-      <add-to-cart-button [stock]="product.stock" [cartButtonPressed]="false"/>
+      <add-to-cart-button [productId]="product.id" [stock]="product.stock" [cartButtonPressed]="false"/>
       <button class="base-btn" [routerLink]="['/products/edit', product.id]">Edit</button>
       <button class="base-btn" (click)="delete(product.id)">Delete</button>
     </div>
