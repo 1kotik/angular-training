@@ -8,8 +8,8 @@
     </div>
     <div class="product-tile__buttons-container">
       <add-to-cart-button [productId]="product.id" [stock]="product.stock" [cartButtonPressed]="false"/>
-      <button class="base-btn" [routerLink]="['/products/edit', product.id]">Edit</button>
-      <button class="base-btn" (click)="delete(product.id)">Delete</button>
+      <button *ngIf="userService.isLoggedIn" class="base-btn" [routerLink]="['/products/edit', product.id]">Edit</button>
+      <button *ngIf="userService.isLoggedIn" class="base-btn" (click)="delete(product.id)">Delete</button>
     </div>
     <div class="product-tile__info">
       <rating [rating]="product.rating.rate"/>

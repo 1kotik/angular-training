@@ -17,7 +17,6 @@ export class CartListComponent implements OnInit {
   public totalPages: number = 1;
 
   ngOnInit() {
-    this.cartService.loadCart();
     this.cartService.cart$.subscribe(cart => {
       this.loadNewEntries();
       this.totalPages = this.cartService.getTotalPages(this.entriesPerPage);

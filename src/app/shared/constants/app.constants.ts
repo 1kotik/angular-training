@@ -2,7 +2,9 @@ import {FilterConfig} from "../models/filter-config.model";
 import {RangeModel} from "../components/range-filter/range-filter.component";
 
 export const APP_CONSTANTS = {
-  CURRENCY: '$'
+  CURRENCY: '$',
+  GUEST_CART_ID_KEY: 'guestCartId',
+  USER_KEY: 'user'
 }
 
 export const FILTER_CONFIGS: FilterConfig[] = [

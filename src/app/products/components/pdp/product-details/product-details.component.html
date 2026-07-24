@@ -1,4 +1,4 @@
-<section class="product-details" *ngIf="product$ | async as product">
+<section class="product-details" *ngIf="product">
   <div class="product-details__img-container">
     <img [ngSrc]="product.image" alt="Product image" class="product-details__img" fill/>
   </div>

@@ -19,7 +19,14 @@ export class AddToCartButtonComponent implements OnInit {
         let product = cart.products.find(entry => entry.id === this.productId);
         if (product) {
           this.addToCartCount = product.count;
+          this.cartButtonPressed = true;
+        } else {
+          this.addToCartCount = 0;
+          this.cartButtonPressed = false;
         }
+      } else {
+        this.addToCartCount = 0;
+        this.cartButtonPressed = false;
       }
     })
   }

@@ -2,7 +2,7 @@
   <span>{{ entry.id }}</span>
   <span>{{ entry.title }}</span>
   <span>{{ entry.count }}</span>
-  <span>{{ entry.price }}</span>
-  <span>{{ entry.count * entry.price }}</span>
+  <span>{{ entry.price | currencyFormat }}</span>
+  <span>{{ entry.count * entry.price | currencyFormat }}</span>
   <fa-icon (click)="removeEntry()" class="cart-entry__remove-btn" [icon]="faTimes"/>
 </div>

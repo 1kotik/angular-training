@@ -1,0 +1,52 @@
+<section class="auth-form">
+  <h2>{{ isSignInMode ? 'Sign in' : 'Sign up' }}</h2>
+  <div class="auth-form__errors-container" *ngIf="form.errors?.['PasswordsDoNotMatch'] || !isAuthSuccess">
+    <span *ngIf="form.errors?.['PasswordsDoNotMatch']">
+      Passwords do not match
+    </span>
+    <span *ngIf="!isAuthSuccess">
+      Credentials are incorrect
+    </span>
+  </div>
+  <form [formGroup]="form" class="auth-form__inputs">
+    <div class="auth-form__input-container">
+      <label for="email" class="auth-form__input-container__label">Email</label>
+      <input id="email" formControlName="email"
+             [ngClass]="['auth-form__input-container__input',
+              isInputInvalid('email') || !isAuthSuccess ? 'auth-form__input-container__input--invalid' : '']"/>
+      <span *ngIf="isInputInvalid('email')" class="auth-form__inputs__error">
+        Email must have format ' jane.smith&#64;example.com'
+      </span>
+    </div>
+    <div class="auth-form__input-container">
+      <label for="password" class="auth-form__input-container__label">Password</label>
+      <input id="password" type="password" formControlName="password" [ngClass]="['auth-form__input-container__input',
+              isInputInvalid('password') || !isAuthSuccess ? 'auth-form__input-container__input--invalid' : '']"/>
+      <span *ngIf="isInputInvalid('password')"
+            class="auth-form__inputs__error">
+        Password must be at least 8 characters
+      </span>
+    </div>
+    <div class="auth-form__input-container" *ngIf="!isSignInMode">
+      <label for="confirmPassword" class="auth-form__input-container__label">Confirm password</label>
+      <input id="confirmPassword" type="password" formControlName="confirmPassword" class="auth-form__input-container__input"/>
+    </div>
+    <button class="auth-form__submit-btn" (click)="performAuth()" [disabled]="form.invalid">
+      {{ isSignInMode ? 'Sign in' : 'Sign up' }}
+    </button>
+  </form>
+  <div class="auth-form__switch-mode">
+    <ng-container *ngIf="isSignInMode else signInMessage">
+      New user?
+      <span class="auth-form__change-auth-mode-text" (click)="changeAuthMode()">
+        Sign up!
+      </span>
+    </ng-container>
+    <ng-template #signInMessage>
+      Do you already have an account?
+      <span class="auth-form__change-auth-mode-text" (click)="changeAuthMode()">
+        Sign in!
+      </span>
+    </ng-template>
+  </div>
+</section>

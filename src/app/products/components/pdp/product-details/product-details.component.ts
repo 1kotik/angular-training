@@ -1,4 +1,4 @@
-import {Component, inject, Input} from '@angular/core';
+import {Component, inject, Input, OnInit} from '@angular/core';
 import {Product} from "../../../../shared/models/product.model";
 import {ProductService} from "../../../services/product.service";
 import {map, Observable} from "rxjs";
@@ -10,25 +10,13 @@ import {PRODUCT_AVAILABILITY} from "../../../../shared/components/stock-availabi
   styleUrl: './product-details.component.scss'
 })
 export class ProductDetailsComponent {
+  private _product!: Product;
 
-  public product$!: Observable<Product>;
-  private readonly productService = inject(ProductService);
-  public productAvailability$!: Observable<any>;
-
-  @Input() set productId(id: string) {
-    this.product$ = this.productService.getById(id);
-    this.productAvailability$ = this.product$.pipe(
-      map(product => this.computeProductAvailability(product.stock))
-    );
+  @Input() set product(product: Product) {
+    this._product = product;
   }
 
-  public computeProductAvailability(stock: number) {
-    if (stock > 9) {
-      return PRODUCT_AVAILABILITY.IN_STOCK;
-    }
-    if (stock > 0) {
-      return PRODUCT_AVAILABILITY.ALMOST_SOLD_OUT;
-    }
-    return PRODUCT_AVAILABILITY.OUT_OF_STOCK;
+  public get product() {
+    return this._product;
   }
 }

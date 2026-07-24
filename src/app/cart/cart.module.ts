@@ -5,6 +5,7 @@ import { CartPageComponent } from './components/cart-page/cart-page.component';
 import { CartEntryComponent } from './components/cart-entry/cart-entry.component';
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import { CartListComponent } from './components/cart-list/cart-list.component';
+import {SharedModule} from "../shared/shared.module";
 
 
 
@@ -18,9 +19,10 @@ import { CartListComponent } from './components/cart-list/cart-list.component';
   exports: [
     AddToCartButtonComponent
   ],
-  imports: [
-    CommonModule,
-    FaIconComponent
-  ]
+    imports: [
+        CommonModule,
+        FaIconComponent,
+        SharedModule
+    ]
 })
 export class CartModule { }

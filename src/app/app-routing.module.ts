@@ -8,6 +8,8 @@ import {
 } from "./products/components/pdp/product-details-page/product-details-page.component";
 import {ProductEditPageComponent} from "./products/components/edit-page/product-edit-page.component";
 import {CartPageComponent} from "./cart/components/cart-page/cart-page.component";
+import {AuthPageComponent} from "./auth/components/auth-page/auth-page.component";
+import {authGuard} from "./shared/guards/auth.guard";
 
 const routes: Routes = [
   {
@@ -21,7 +23,8 @@ const routes: Routes = [
   },
   {
     path: 'products/edit/:id',
-    component: ProductEditPageComponent
+    component: ProductEditPageComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'products/:id',
@@ -30,6 +33,10 @@ const routes: Routes = [
   {
     path: 'cart',
     component: CartPageComponent
+  },
+  {
+    path: 'auth',
+    component: AuthPageComponent
   }
 ];
 

@@ -1,6 +1,7 @@
 import {Component, inject, Input} from '@angular/core';
 import {Product} from "../../../../shared/models/product.model";
 import {ProductService} from "../../../services/product.service";
+import {UserService} from "../../../../auth/services/user.service";
 
 @Component({
   selector: 'product-listing-tile',
@@ -10,6 +11,7 @@ import {ProductService} from "../../../services/product.service";
 export class ProductListingTileComponent {
   @Input() public product!: Product;
   private readonly productService: ProductService = inject(ProductService);
+  public userService: UserService = inject(UserService);
 
   public delete(id: string): void {
     this.productService.deleteById(id);

@@ -2,11 +2,11 @@
   <div class="nav__elements-container nav__left-elements-container">
     <navigation-button [icon]="faChild" text="MyCompany" link="/"/>
     <navigation-button text="Shop" link="/"/>
-    <navigation-button text="Authentication" link="/auth"/>
+    <navigation-button *ngIf="!userService.isLoggedIn" text="Authentication" link="/auth"/>
     <navigation-button [icon]="faShoppingCart" link="/cart"/>
   </div>
   <div class="nav__elements-container nav__right-elements-container">
     <navigation-search-input/>
-    <navigation-button [icon]="faSignOut"/>
+    <navigation-button *ngIf="userService.isLoggedIn" (click)="logout()" [icon]="faSignOut"/>
   </div>
 </nav>

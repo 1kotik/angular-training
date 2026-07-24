@@ -1,6 +1,9 @@
 <article class="pdp">
-  <div class="pdp__container">
-    <product-details [productId]="productId" class="pdp__section" />
+  <ng-container *ngIf="product$ | async as product else notFoundMessage" class="pdp__container">
+    <product-details [product]="product" class="pdp__section" />
     <product-review-list [productId]="productId" class="pdp__section pdp__section--reviews" />
-  </div>
+  </ng-container>
+  <ng-template #notFoundMessage>
+    <span class="pdp__not-found-message">Product not found</span>
+  </ng-template>
 </article>

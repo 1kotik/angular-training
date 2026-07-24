@@ -24,4 +24,8 @@ export class ApiService {
   public updateById<T>(entityName: string, id: string | number, newEntity: T): Observable<T> {
     return this.httpClient.put<T>(`${this.API_URL}/${entityName}/${id}`, newEntity);
   }
+
+  public post<T>(entityName: string, entity: T): Observable<T> {
+    return this.httpClient.post<T>(`${this.API_URL}/${entityName}`, entity);
+  }
 }
