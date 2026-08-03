@@ -1,0 +1,19 @@
+<section class="filters">
+  <h2 class="filters__title">Filters</h2>
+  <form [formGroup]="form" class="filters__container">
+    <range-filter formControlName="priceRange" name="Price"/>
+    <range-filter formControlName="ratingRange" name="Rating"/>
+    <div class="filters__container__checkbox-group">
+      <label for="stockPresence" class="filters__container__label">Stock presence</label>
+      <input id="stockPresence" formControlName="stockPresence" type="checkbox" class="filters__container__checkbox">
+    </div>
+
+    <div class="filters__container__checkbox-group">
+      <label for="reviewPresence" class="filters__container__label">Review presence</label>
+      <input id="reviewPresence" formControlName="reviewPresence" type="checkbox" class="filters__container__checkbox">
+    </div>
+    <button type="submit" (click)="applyFilters()" class="filters__container__submit-btn">Apply</button>
+    <button type="button" (click)="resetFilters()" class="filters__container__reset-btn">Reset</button>
+  </form>
+</section>
+

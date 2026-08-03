@@ -1,0 +1,15 @@
+.base-btn {
+  padding: var(--base-btn-padding, 0.4rem 0.6rem);
+  border-radius: 6px;
+  border: 1px solid darkgray;
+  cursor: pointer;
+  background: whitesmoke;
+  transition: background 0.2s;
+  height: var(--base-btn-height, auto);
+  font-size: var(--base-btn-font-size, inherit);
+  line-height: var(--base-btn-line-height, normal);
+
+  &:hover {
+    background: lightgray;
+  }
+}

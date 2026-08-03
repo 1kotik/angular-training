@@ -1,0 +1,9 @@
+<div class="filter-container">
+  <h3>{{ name }}</h3>
+  <div class="form" [formGroup]="form">
+    <label for="from" class="form__input-label">From</label>
+    <input type="number" id="from" class="form__input" formControlName="from">
+    <label for="to" class="form__input-label">To</label>
+    <input type="number" id="to" class="form__input" formControlName="to">
+  </div>
+</div>

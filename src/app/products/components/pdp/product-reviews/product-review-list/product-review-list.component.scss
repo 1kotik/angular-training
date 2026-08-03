@@ -1,0 +1,23 @@
+.product-review-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+
+  &__header {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 1.5rem 0;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+app-product-review-item {
+  display: block;
+  border-bottom: 1px solid lightgray;
+  padding: 1.5rem 0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}

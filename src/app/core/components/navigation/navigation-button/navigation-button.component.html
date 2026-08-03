@@ -1,0 +1,4 @@
+<button [routerLink]="link" [ngClass]="['navigation-btn']">
+  <fa-icon *ngIf="icon" [icon]="icon"/>
+  <span *ngIf="text"> {{ text }}</span>
+</button>
