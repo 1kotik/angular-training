@@ -1,10 +1,11 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {ProductService} from "../../../services/product.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {FilterInfoService} from "../../../services/filter-info.service";
 import {FILTER_CONFIGS} from "../../../../shared/constants/app.constants";
 import {FilterConfig} from "../../../../shared/models/filter-config.model";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'filter-section',
@@ -18,6 +19,7 @@ export class FilterSectionComponent implements OnInit {
   private router: Router = inject(Router);
   private route: ActivatedRoute = inject(ActivatedRoute);
   private appliedManually = false;
+  private destroyRef = inject(DestroyRef);
 
   public form: FormGroup = this.formBuilder.group({
     priceRange: [{from: null, to: null}],
@@ -27,19 +29,23 @@ export class FilterSectionComponent implements OnInit {
   })
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      if (!this.appliedManually) {
-        this.form.patchValue(this.getValuesFromParams(params));
-      }
-      this.appliedManually = false;
-      this.productService.loadProducts(params);
-      this.filterInfoService.updateFilterInfos(this.form.value);
-    });
+    this.route.queryParams
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(params => {
+        if (!this.appliedManually) {
+          this.form.patchValue(this.getValuesFromParams(params));
+        }
+        this.appliedManually = false;
+        this.productService.loadProducts(params);
+        this.filterInfoService.updateFilterInfos(this.form.value);
+      });
 
-    this.filterInfoService.filterDeleted$.subscribe(filterId => {
-      this.form.get(filterId)?.reset();
-      this.applyFilters();
-    })
+    this.filterInfoService.filterDeleted$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(filterId => {
+        this.form.get(filterId)?.reset();
+        this.applyFilters();
+      })
   }
 
   public applyFilters(): void {

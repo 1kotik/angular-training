@@ -1,35 +1,30 @@
-import {inject, Injectable} from '@angular/core';
-import {ApiService} from "../../shared/services/api.service";
+import {DestroyRef, inject, Injectable} from '@angular/core';
 import {Product} from "../../shared/models/product.model";
 import {BehaviorSubject, Observable} from "rxjs";
 import {Params} from "@angular/router";
-import {HttpParams} from "@angular/common/http";
-import {
-  FILTERS_API_PARAMS_MAP
-} from "../../shared/constants/app.constants";
+import {ProductDataService} from "./product-data.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private readonly apiService: ApiService = inject(ApiService);
-  private readonly ENTITY_NAME: string = "products";
+  private productDataService: ProductDataService = inject(ProductDataService);
   private productsSubject = new BehaviorSubject<Product[]>([]);
   private products$ = this.productsSubject.asObservable();
-
-  constructor() {
-    this.loadProducts();
-  }
+  private destroyRef = inject(DestroyRef);
 
   public loadProducts(params?: Params): void {
-    this.getProducts(params).subscribe({
-      next: (products) => {
-        this.productsSubject.next(products);
-      },
-      error: () => {
-        this.productsSubject.next([]);
-      }
-    });
+    this.getProducts(params)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (products) => {
+          this.productsSubject.next(products);
+        },
+        error: () => {
+          this.productsSubject.next([]);
+        }
+      });
   }
 
   public get products(): Observable<Product[]> {
@@ -37,54 +32,34 @@ export class ProductService {
   }
 
   private getProducts(params?: Params): Observable<Product[]> {
-    const httpParams = this.fillHttpParams(params);
-    return this.apiService.get<Product[]>(this.ENTITY_NAME, httpParams);
+    return this.productDataService.getProducts(params);
   }
 
   public deleteById(id: string): void {
-    this.apiService.deleteById(this.ENTITY_NAME, id).subscribe({
-      next: () => {
-        this.deleteProduct(id);
-      },
-      error: (err) => {
-        if (err.status === 404) {
+    this.productDataService.deleteByProductId(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
           this.deleteProduct(id);
+        },
+        error: (err) => {
+          if (err.status === 404) {
+            this.deleteProduct(id);
+          }
         }
-      }
-    });
+      });
   }
 
   public getById(id: string): Observable<Product> {
-    return this.apiService.getById<Product>(this.ENTITY_NAME, id);
+    return this.productDataService.getByProductId(id);
   }
 
   public updateProduct(product: Product): Observable<Product> {
-    return this.apiService.updateById(this.ENTITY_NAME, product.id, product);
+    return this.productDataService.updateProduct(product);
   }
 
   private deleteProduct(id: string): void {
     const current = this.productsSubject.getValue();
     this.productsSubject.next(current.filter(product => id !== product.id));
-  }
-
-  private fillHttpParams(params: Params | undefined): HttpParams | undefined {
-    if (!params) {
-      return undefined;
-    }
-    let httpParams = new HttpParams();
-    for (const [key, httpParamName] of FILTERS_API_PARAMS_MAP) {
-      const httpParamValue = params[key];
-      if (httpParamValue !== undefined) {
-        httpParams = this.setHttpParam(httpParams, httpParamName, httpParamValue);
-      }
-    }
-    return httpParams;
-  }
-
-  private setHttpParam(httpParams: HttpParams, httpParamName: string, httpParamValue: string | number | boolean): HttpParams {
-    if (httpParamValue === 'false' || httpParamValue === 'true') {
-      httpParamValue = httpParamValue === 'true' ? 0 : -1;
-    }
-    return httpParams.set(httpParamName, httpParamValue);
   }
 }

@@ -1,5 +1,6 @@
-import {Component, forwardRef, inject, Input, OnInit} from '@angular/core';
-import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {Component, DestroyRef, forwardRef, inject, Input, OnInit} from '@angular/core';
+import {ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR, Validators} from "@angular/forms";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 export interface RangeModel {
   from?: number;
@@ -18,8 +19,12 @@ export interface RangeModel {
 })
 export class RangeFilterComponent implements ControlValueAccessor, OnInit {
   @Input() name = '';
+  @Input() min: number | null = null;
+  @Input() max: number | null = null;
 
   private readonly formBuilder: FormBuilder = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
+
   public form: FormGroup = this.formBuilder.group({
     from: [null],
     to: [null]
@@ -31,9 +36,11 @@ export class RangeFilterComponent implements ControlValueAccessor, OnInit {
   }
 
   ngOnInit() {
-    this.form.valueChanges.subscribe(change => {
-      this.onChange(change);
-    })
+    this.form.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(change => {
+        this.onChange(change);
+      })
   }
 
   writeValue(range: RangeModel): void {
@@ -51,5 +58,4 @@ export class RangeFilterComponent implements ControlValueAccessor, OnInit {
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
-
 }

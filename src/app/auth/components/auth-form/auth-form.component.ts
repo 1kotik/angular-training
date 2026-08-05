@@ -1,8 +1,9 @@
-import {Component, inject} from '@angular/core';
+import {Component, DestroyRef, inject} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
 import {UserService} from "../../services/user.service";
 import {Router} from "@angular/router";
 import {APP_CONSTANTS} from "../../../shared/constants/app.constants";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'auth-form',
@@ -13,6 +14,7 @@ export class AuthFormComponent {
   private formBuilder: FormBuilder = inject(FormBuilder);
   private userService: UserService = inject(UserService);
   private router: Router = inject(Router);
+  private destroyRef = inject(DestroyRef);
   public form: FormGroup = this.formBuilder.group({
     email: [null, [Validators.required, Validators.email]],
     password: [null, [Validators.required, Validators.minLength(APP_CONSTANTS.PASSWORD_MIN_LENGTH)]],
@@ -39,19 +41,21 @@ export class AuthFormComponent {
     const formValues = this.form.value;
     const authResult$ = this.isSignInMode ? this.userService.login(formValues.email, formValues.password)
       : this.userService.register(formValues.email, formValues.password);
-    authResult$.subscribe({
-      next: (isSuccess) => {
-        this.isAuthSuccess = isSuccess;
-        if (this.isAuthSuccess) {
-          this.router.navigate(['/products']);
-        } else {
-          this.form.controls['password'].reset();
+    authResult$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (isSuccess) => {
+          this.isAuthSuccess = isSuccess;
+          if (this.isAuthSuccess) {
+            this.router.navigate(['/products']);
+          } else {
+            this.form.controls['password'].reset();
+          }
+        },
+        error: () => {
+          this.isAuthSuccess = false;
         }
-      },
-      error: () => {
-        this.isAuthSuccess = false;
-      }
-    })
+      })
   }
 
   public isInputInvalid(name: string): boolean {

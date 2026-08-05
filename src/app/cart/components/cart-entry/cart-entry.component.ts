@@ -1,7 +1,8 @@
-import {Component, inject, Input} from '@angular/core';
+import {Component, DestroyRef, inject, Input} from '@angular/core';
 import {CartEntry} from "../../../shared/models/cart-entry.model";
 import {faTimes} from "@fortawesome/free-solid-svg-icons";
 import {CartService} from "../../services/cart.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'cart-entry',
@@ -12,12 +13,15 @@ export class CartEntryComponent {
   @Input() public entry!: CartEntry;
   private cartService: CartService = inject(CartService);
   protected readonly faTimes = faTimes;
+  private destroyRef = inject(DestroyRef);
 
   public removeEntry(): void {
-    this.cartService.removeEntry(this.entry.id).subscribe(isSuccess => {
-      if (!isSuccess) {
-        alert("Unexpected error occurred while removing item from cart");
-      }
-    });
+    this.cartService.removeEntry(this.entry.id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(isSuccess => {
+        if (!isSuccess) {
+          alert("Unexpected error occurred while removing item from cart");
+        }
+      });
   }
 }

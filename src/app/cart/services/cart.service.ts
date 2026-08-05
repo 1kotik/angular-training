@@ -1,48 +1,53 @@
-import { inject, Injectable } from '@angular/core';
-import { HttpParams } from "@angular/common/http";
-import { Router, NavigationEnd } from "@angular/router";
-import { ApiService } from "../../shared/services/api.service";
-import { Cart } from "../../shared/models/cart.model";
-import { CartEntry } from "../../shared/models/cart-entry.model";
-import { BehaviorSubject, fromEvent, Observable, of } from "rxjs";
-import { catchError, filter, map, switchMap } from "rxjs/operators";
-import { ProductService } from "../../products/services/product.service";
-import { UserService } from "../../auth/services/user.service";
-import { APP_CONSTANTS } from "../../shared/constants/app.constants";
-import { User } from "../../shared/models/user.model";
+import {DestroyRef, inject, Injectable} from '@angular/core';
+import {NavigationEnd, Router} from "@angular/router";
+import {Cart} from "../../shared/models/cart.model";
+import {CartEntry} from "../../shared/models/cart-entry.model";
+import {BehaviorSubject, fromEvent, Observable, of} from "rxjs";
+import {catchError, filter, map, switchMap} from "rxjs/operators";
+import {ProductService} from "../../products/services/product.service";
+import {UserService} from "../../auth/services/user.service";
+import {APP_CONSTANTS} from "../../shared/constants/app.constants";
+import {User} from "../../shared/models/user.model";
+import {CartDataService} from "./cart-data.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
-  private apiService: ApiService = inject(ApiService);
-  private cartSubject = new BehaviorSubject<Cart>({ products: [] } as unknown as Cart);
+  private cartDataService: CartDataService = inject(CartDataService);
+  private cartSubject = new BehaviorSubject<Cart>({products: []} as unknown as Cart);
   public cart$: Observable<Cart> = this.cartSubject.asObservable();
-  private ENTITY_NAME = "cart";
   private CART_SYNC_EVENT = "CART_SYNC_EVENT";
   private productService: ProductService = inject(ProductService);
   private userService: UserService = inject(UserService);
   private router: Router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
-    this.userService.loggedUser$.subscribe(user => {
-      this.loadCart(user);
-    });
+    this.userService.loggedUser$
+      .pipe(takeUntilDestroyed())
+      .subscribe(user => {
+        this.loadCart(user);
+      });
 
     this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
+      filter(event => event instanceof NavigationEnd),
+      takeUntilDestroyed()
     ).subscribe(() => {
       this.loadCart(this.userService.getCurrentUser());
     });
 
-    fromEvent<StorageEvent>(window, 'storage').subscribe(event => {
-      if (event.key === APP_CONSTANTS.GUEST_CART_ID_KEY && event.newValue) {
-        this.loadCartForGuestUser();
-      }
-      if (event.key === this.CART_SYNC_EVENT) {
-        this.loadCart(this.userService.getCurrentUser());
-      }
-    });
+    fromEvent<StorageEvent>(window, 'storage')
+      .pipe(takeUntilDestroyed())
+      .subscribe(event => {
+        if (event.key === APP_CONSTANTS.GUEST_CART_ID_KEY && event.newValue) {
+          this.loadCartForGuestUser();
+        }
+        if (event.key === this.CART_SYNC_EVENT) {
+          this.loadCart(this.userService.getCurrentUser());
+        }
+      });
   }
 
   public loadCart(user?: User) {
@@ -55,18 +60,12 @@ export class CartService {
 
   public getPage(pageNumber: number, entriesPerPage: number): CartEntry[] {
     const entries = this.getEntries();
-    if (!entries) {
-      return [];
-    }
     const startIndex = (pageNumber - 1) * entriesPerPage;
     return entries.slice(startIndex, startIndex + entriesPerPage);
   }
 
   public getTotalPages(entriesPerPage: number): number {
     const entries = this.getEntries();
-    if (!entries) {
-      return 0;
-    }
     return Math.ceil(entries.length / entriesPerPage);
   }
 
@@ -77,7 +76,10 @@ export class CartService {
     let entries = this.getEntries();
     if (!entries) {
       entries = [];
-      this.cartSubject.value.products = entries;
+      this.cartSubject.next({
+        ...this.cartSubject.value,
+        products: entries
+      });
     }
     const entry = entries.find(product => productId === product.id);
     if (entry) {
@@ -116,11 +118,7 @@ export class CartService {
     const currentCart = this.cartSubject.value;
     const cartId = currentCart.id;
 
-    const request$ = cartId
-      ? this.apiService.updateById<Cart>(this.ENTITY_NAME, cartId, currentCart)
-      : this.apiService.post<Cart>(this.ENTITY_NAME, currentCart);
-
-    return request$.pipe(
+    return this.cartDataService.updateCartOrCreateNewIfNotExist(currentCart).pipe(
       map(cart => {
         if (cart) {
           if (!cartId && cart.id && cart.userId === 'guest') {
@@ -144,36 +142,39 @@ export class CartService {
   }
 
   private loadCartForLoggedInUser(userId: string) {
-    const httpParams = new HttpParams().set('userId', userId);
-    this.apiService.get<Cart[]>(this.ENTITY_NAME, httpParams).subscribe({
-      next: (carts) => {
-        if (carts && carts.length > 0) {
-          this.cartSubject.next(carts[0]);
-        } else {
+    this.cartDataService.getCartByUserId(userId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (cart) => {
+          if (cart) {
+            this.cartSubject.next(cart);
+          } else {
+            this.initLocalEmptyCart(userId);
+          }
+        },
+        error: () => {
           this.initLocalEmptyCart(userId);
         }
-      },
-      error: () => {
-        this.initLocalEmptyCart(userId);
-      }
-    });
+      });
   }
 
   private loadCartForGuestUser() {
     const guestCartId = localStorage.getItem(APP_CONSTANTS.GUEST_CART_ID_KEY);
     if (guestCartId) {
-      this.apiService.getById<Cart>(this.ENTITY_NAME, guestCartId).subscribe({
-        next: (cart) => {
-          if (cart) {
-            this.cartSubject.next(cart);
-          } else {
+      this.cartDataService.getCartById(guestCartId)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: (cart) => {
+            if (cart) {
+              this.cartSubject.next(cart);
+            } else {
+              this.initLocalEmptyCart('guest');
+            }
+          },
+          error: () => {
             this.initLocalEmptyCart('guest');
           }
-        },
-        error: () => {
-          this.initLocalEmptyCart('guest');
-        }
-      });
+        });
     } else {
       this.initLocalEmptyCart('guest');
     }

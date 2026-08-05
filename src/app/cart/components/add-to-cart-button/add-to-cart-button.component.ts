@@ -1,5 +1,6 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, Input, OnInit} from '@angular/core';
 import {CartService} from "../../services/cart.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'add-to-cart-button',
@@ -12,23 +13,26 @@ export class AddToCartButtonComponent implements OnInit {
   @Input() public productId = '';
   public addToCartCount = 0;
   private cartService: CartService = inject(CartService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit() {
-    this.cartService.cart$.subscribe(cart => {
-      if(cart && cart.products) {
-        const product = cart.products.find(entry => entry.id === this.productId);
-        if (product) {
-          this.addToCartCount = product.count;
-          this.cartButtonPressed = true;
+    this.cartService.cart$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(cart => {
+        if (cart && cart.products) {
+          const product = cart.products.find(entry => entry.id === this.productId);
+          if (product) {
+            this.addToCartCount = product.count;
+            this.cartButtonPressed = true;
+          } else {
+            this.addToCartCount = 0;
+            this.cartButtonPressed = false;
+          }
         } else {
           this.addToCartCount = 0;
           this.cartButtonPressed = false;
         }
-      } else {
-        this.addToCartCount = 0;
-        this.cartButtonPressed = false;
-      }
-    })
+      })
   }
 
   public addToCartPressed(): void {
@@ -42,14 +46,16 @@ export class AddToCartButtonComponent implements OnInit {
     const previousQuantity = this.addToCartCount;
     this.addToCartCount = newQuantity;
 
-    this.cartService.setNewQuantityForEntry(this.productId, newQuantity).subscribe(isSuccess => {
-      if (!isSuccess) {
-        this.addToCartCount = previousQuantity;
-        if (previousQuantity === 0) {
-          this.cartButtonPressed = false;
+    this.cartService.setNewQuantityForEntry(this.productId, newQuantity)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(isSuccess => {
+        if (!isSuccess) {
+          this.addToCartCount = previousQuantity;
+          if (previousQuantity === 0) {
+            this.cartButtonPressed = false;
+          }
+          alert("Unexpected error occurred while adding to cart");
         }
-        alert("Unexpected error occurred while adding to cart");
-      }
-    });
+      });
   }
 }

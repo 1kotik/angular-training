@@ -1,35 +1,36 @@
-import {inject, Injectable} from '@angular/core';
-import {ApiService} from "../../shared/services/api.service";
+import {DestroyRef, inject, Injectable} from '@angular/core';
 import {ProductReview} from "../../shared/models/product-review.model";
 import {BehaviorSubject, Observable} from "rxjs";
-import {HttpParams} from "@angular/common/http";
+import {ProductReviewDataService} from "./product-review-data.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductReviewService {
-  private readonly apiService: ApiService = inject(ApiService);
-  private readonly ENTITY_NAME: string = "reviews";
+  private productReviewDataService: ProductReviewDataService = inject(ProductReviewDataService);
   private reviewsSubject = new BehaviorSubject<ProductReview[]>([]);
   private reviews$ = this.reviewsSubject.asObservable();
+  private destroyRef = inject(DestroyRef);
 
   public get reviews(): Observable<ProductReview[]> {
     return this.reviews$;
   }
 
   public loadReviews(productId: string): void {
-    this.getReviews(productId).subscribe({
-      next: (reviews) => {
-        this.reviewsSubject.next(reviews);
-      },
-      error: () => {
-        this.reviewsSubject.next([]);
-      }
-    });
+    this.getReviews(productId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (reviews) => {
+          this.reviewsSubject.next(reviews);
+        },
+        error: () => {
+          this.reviewsSubject.next([]);
+        }
+      });
   }
 
   public getReviews(productId: string): Observable<ProductReview[]> {
-    const params: HttpParams = new HttpParams().set("productId", productId);
-    return this.apiService.get<ProductReview[]>(this.ENTITY_NAME, params);
+    return this.productReviewDataService.getReviewsByProductId(productId);
   }
 }

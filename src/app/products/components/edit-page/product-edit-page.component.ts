@@ -1,8 +1,10 @@
-import {Component, inject, Input} from '@angular/core';
+import {Component, DestroyRef, inject, Input} from '@angular/core';
 import {Product} from "../../../shared/models/product.model";
 import {BehaviorSubject, Observable} from "rxjs";
 import {ProductService} from "../../services/product.service";
 import {Router} from "@angular/router";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {NgForm} from "@angular/forms";
 
 @Component({
   selector: 'edit-page',
@@ -14,32 +16,43 @@ export class ProductEditPageComponent {
   public product$: Observable<Product | null> = this.productSubject.asObservable();
   private readonly productService = inject(ProductService);
   private readonly router: Router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
   @Input() set id(id: string) {
-    this.productService.getById(id).subscribe({
-      next: (product)=> {
-        this.productSubject.next(product);
-      },
-      error: ()=> {
-        this.productSubject.next(null);
-      }
-    })
+    this.productService.getById(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (product) => {
+          this.productSubject.next(product);
+        },
+        error: () => {
+          this.productSubject.next(null);
+        }
+      })
   }
 
-  public editProduct(product: Product, formValue: any): void {
-    product.image = formValue.image;
-    product.title = formValue.title;
-    product.price = formValue.price;
-    product.stock = formValue.stock;
-    product.description = formValue.description;
-    this.productService.updateProduct(product).subscribe({
-      next: (updatedProduct) => {
-        this.productSubject.next(updatedProduct);
-        this.router.navigate(['/products/' + product.id]);
-      },
-      error: ()=> {
-        alert("Error occurred while updating product");
-      }
-    });
+  public editProduct(product: Product, form: NgForm): void {
+    const formValue = form.value;
+    const productToUpdate = {
+      id: product.id,
+      image: formValue.image,
+      title: formValue.title,
+      price: formValue.price,
+      stock: formValue.stock,
+      description: formValue.description,
+      rating: product.rating
+    }
+    this.productService.updateProduct(productToUpdate)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (updatedProduct) => {
+          this.productSubject.next(updatedProduct);
+          this.router.navigate(['/products/' + product.id]);
+        },
+        error: () => {
+          form.resetForm(product);
+          alert("Error occurred while updating product");
+        }
+      });
   }
 }

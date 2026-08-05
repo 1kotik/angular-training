@@ -8,6 +8,21 @@ export const APP_CONSTANTS = {
   PASSWORD_MIN_LENGTH: 6,
 }
 
+export const PRODUCT_AVAILABILITY = {
+  IN_STOCK: {
+    text: 'In stock',
+    labelColor: 'green'
+  },
+  ALMOST_SOLD_OUT: {
+    text: 'Almost sold out',
+    labelColor: 'orange'
+  },
+  OUT_OF_STOCK: {
+    text: 'Out of stock',
+    labelColor: 'red'
+  }
+}
+
 export const FILTER_CONFIGS: FilterConfig[] = [
   {
     formName: 'priceRange',

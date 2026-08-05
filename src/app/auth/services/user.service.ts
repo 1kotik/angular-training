@@ -1,31 +1,30 @@
 import {inject, Injectable} from '@angular/core';
-import {ApiService} from "../../shared/services/api.service";
-import {HttpParams} from "@angular/common/http";
 import {User} from "../../shared/models/user.model";
 import {APP_CONSTANTS} from "../../shared/constants/app.constants";
 import {BehaviorSubject, fromEvent, map, Observable, of, switchMap} from "rxjs";
 import {Router} from "@angular/router";
+import {AuthDataService} from "./auth-data.service";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private apiService: ApiService = inject(ApiService);
+  private authDataService: AuthDataService = inject(AuthDataService);
   private router: Router = inject(Router);
-  private ENTITY_NAME = 'users';
   private loggedUserSubject: BehaviorSubject<User | undefined> = new BehaviorSubject<User | undefined>(undefined);
   public loggedUser$: Observable<User | undefined> = this.loggedUserSubject.asObservable();
   public isLoggedIn = false;
 
 
   constructor() {
-    this.loadUserFromStorage();
-
-    fromEvent<StorageEvent>(window, 'storage').subscribe(event => {
-      if (event.key === APP_CONSTANTS.USER_KEY) {
-        this.loadUserFromStorage();
-      }
-    });
+    fromEvent<StorageEvent>(window, 'storage')
+      .pipe(takeUntilDestroyed())
+      .subscribe(event => {
+        if (event.key === APP_CONSTANTS.USER_KEY) {
+          this.loadUserFromStorage();
+        }
+      });
   }
 
   public getCurrentUser(): User | undefined {
@@ -33,10 +32,9 @@ export class UserService {
   }
 
   public login(email: string, password: string): Observable<boolean> {
-    const httpParams = new HttpParams().set('email', email);
-    return this.apiService.get<User[]>(this.ENTITY_NAME, httpParams).pipe(map(users => {
-      if (users && users.length > 0 && users[0].password === password) {
-        this.loggedUserSubject.next(users[0]);
+    return this.authDataService.getUserByEmail(email).pipe(map(user => {
+      if (user && user.password === password) {
+        this.loggedUserSubject.next(user);
         localStorage.setItem(APP_CONSTANTS.USER_KEY, JSON.stringify(this.loggedUserSubject.value));
         localStorage.removeItem(APP_CONSTANTS.GUEST_CART_ID_KEY);
         this.isLoggedIn = true;
@@ -46,9 +44,8 @@ export class UserService {
   }
 
   public register(email: string, password: string): Observable<boolean> {
-    const httpParams = new HttpParams().set('email', email);
-    return this.apiService.get<User[]>(this.ENTITY_NAME, httpParams).pipe(switchMap(users => {
-      if (!users || users.length === 0) {
+    return this.authDataService.getUserByEmail(email).pipe(switchMap(user => {
+      if (!user) {
         return this.createNewUser(email, password);
       }
       return of(false);
@@ -63,7 +60,7 @@ export class UserService {
     this.router.navigate(['/auth']);
   }
 
-  private loadUserFromStorage() {
+  public loadUserFromStorage() {
     const stringUser = localStorage.getItem(APP_CONSTANTS.USER_KEY);
     const currentUser = this.loggedUserSubject.value;
     if (stringUser) {
@@ -81,11 +78,7 @@ export class UserService {
   }
 
   private createNewUser(email: string, password: string): Observable<boolean> {
-    const newUser = {
-      email: email,
-      password: password
-    };
-    return this.apiService.post<User>(this.ENTITY_NAME, newUser).pipe(map(user => {
+    return this.authDataService.createUser(email, password).pipe(map(user => {
       if (user) {
         this.loggedUserSubject.next(user);
         localStorage.setItem(APP_CONSTANTS.USER_KEY, JSON.stringify(this.loggedUserSubject.value));
