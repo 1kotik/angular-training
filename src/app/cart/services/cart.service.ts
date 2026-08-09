@@ -110,12 +110,14 @@ export class CartService {
     if (!entries) {
       return of(false);
     }
-    this.cartSubject.value.products = entries.filter(entry => entryId !== entry.id);
-    return this.updateCart();
+    const cartToUpdate: Cart = {
+      ...this.cartSubject.value,
+      products: entries.filter(entry => entryId !== entry.id)
+    };
+    return this.updateCart(cartToUpdate);
   }
 
-  private updateCart(): Observable<boolean> {
-    const currentCart = this.cartSubject.value;
+  private updateCart(currentCart: Cart = this.cartSubject.value): Observable<boolean> {
     const cartId = currentCart.id;
 
     return this.cartDataService.updateCartOrCreateNewIfNotExist(currentCart).pipe(
