@@ -1,0 +1,50 @@
+.add-to-cart-btn {
+  width: var(--add-to-cart-button-width, 100%);
+  display: var(--add-to-cart-button-display, inline-block);
+  box-sizing: border-box;
+  --base-btn-height: var(--add-to-cart-button-height, auto);
+  --base-btn-font-size: var(--add-to-cart-button-font-size, inherit);
+  --base-btn-padding: var(--add-to-cart-button-padding, 0.4rem 0.6rem);
+}
+
+.cart-counter {
+  display: flex;
+  align-items: center;
+  gap: 0.05rem;
+  width: var(--add-to-cart-button-width, 100%);
+  box-sizing: border-box;
+  justify-content: space-between;
+  height: var(--add-to-cart-button-height, auto);
+
+  &__count {
+    min-width: 20px;
+    text-align: center;
+    font-weight: bold;
+    flex: 1 1 auto;
+    font-size: var(--add-to-cart-button-font-size, inherit);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__btn-counter {
+    font-weight: bold;
+    box-sizing: border-box;
+    text-align: center;
+
+    --base-btn-height: var(--add-to-cart-counter-btn-size, var(--add-to-cart-button-height, 2rem));
+    --base-btn-font-size: var(--add-to-cart-button-font-size, inherit);
+    --base-btn-padding: 0;
+
+    height: var(--add-to-cart-counter-btn-size, var(--add-to-cart-button-height, 2rem));
+    width: var(--add-to-cart-counter-btn-size, var(--add-to-cart-button-height, 2rem));
+    min-width: var(--add-to-cart-counter-btn-size, var(--add-to-cart-button-height, 2rem));
+    flex: 0 0 var(--add-to-cart-counter-btn-size, var(--add-to-cart-button-height, 2rem));
+    font-size: var(--add-to-cart-button-font-size, inherit);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+}

@@ -1,0 +1,37 @@
+<div class="input-container">
+  <label [for]="id" class="input-container__label">
+    {{ label }}
+  </label>
+  <ng-container *ngIf="inputType === 'input' else textArea">
+    <input
+      [id]="id"
+      [type]="type"
+      [(ngModel)]="value"
+      (ngModelChange)="onChange(value)"
+      (blur)="onTouched()"
+      [pattern]="pattern"
+      [required]="required"
+      #inputModel="ngModel"
+      [class.input-container__input--invalid]="inputModel.invalid"
+      class="input-container__input">
+    <span *ngIf="inputModel.invalid">
+        Field is invalid
+    </span>
+  </ng-container>
+
+  <ng-template #textArea>
+    <textarea
+      [id]="id"
+      [(ngModel)]="value"
+      (ngModelChange)="onChange(value)"
+      (blur)="onTouched()"
+      [required]="required"
+      #textAreaModel="ngModel"
+      [class.input-container__input--invalid]="textAreaModel.invalid"
+      class="input-container__input">
+    </textarea>
+    <span *ngIf="textAreaModel.invalid">
+        Field is invalid
+    </span>
+  </ng-template>
+</div>

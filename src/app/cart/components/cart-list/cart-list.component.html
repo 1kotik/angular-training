@@ -1,0 +1,24 @@
+<section class="cart-entries" *ngIf="(currentPageEntries$ | async) as entries">
+  <div *ngIf="entries.length > 0 else errorMessage">
+    <div class="cart-entries__header">
+      <span>ID</span>
+      <span>Product Name</span>
+      <span>Count</span>
+      <span>Price</span>
+      <span>Total Price</span>
+      <span></span>
+    </div>
+    <cart-entry *ngFor="let entry of entries"
+                [entry]="entry"/>
+    <div class="cart-entries__page-buttons">
+      <button *ngFor="let number of pageCounter(); let pageNumber = index"
+              [ngClass]="['base-btn', pageNumber + 1 === currentPage ? 'base-btn--selected' : '']"
+              (click)="loadPage(pageNumber + 1)">
+        {{ pageNumber + 1 }}
+      </button>
+    </div>
+  </div>
+  <ng-template #errorMessage>
+    <span class="error-message">There are no entries</span>
+  </ng-template>
+</section>

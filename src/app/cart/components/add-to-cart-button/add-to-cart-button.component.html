@@ -1,0 +1,17 @@
+<button [disabled]="stock < 1"
+        (click)="addToCartPressed()" *ngIf="!cartButtonPressed; else cartCounter"
+        [ngClass]="['add-to-cart-btn', 'base-btn']">Add to cart
+</button>
+<ng-template #cartCounter>
+  <div class="cart-counter">
+    <button [disabled]="addToCartCount <= 0"
+            (click)="changeQuantityInCart(addToCartCount - 1)"
+            [ngClass]="['cart-counter__btn-counter', 'base-btn']">-
+    </button>
+    <span class="cart-counter__count">{{ addToCartCount }}</span>
+    <button [disabled]="addToCartCount >= stock"
+            (click)="changeQuantityInCart(addToCartCount + 1)"
+            [ngClass]="['cart-counter__btn-counter', 'base-btn']">+
+    </button>
+  </div>
+</ng-template>
